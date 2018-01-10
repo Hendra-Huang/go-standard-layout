@@ -235,10 +235,10 @@ func (l *Logger) print(logLevel Level, msg interface{}, v ...interface{}) {
 // WithFields provide a functionality to log fields passed to the function
 // the functionality is 100% same with logrus.Fields and logrus.WithFields
 // the Logger object will be copied and returned as *Logger for further use
-func (l Logger) WithFields(f Fields) *Logger {
+func (l *Logger) WithFields(f Fields) *Logger {
 	// add fields to copied logger object
 	l.fields = f
-	return &l
+	return l
 }
 
 // fieldsToArrayInterface used to tranfrom fields to []interface

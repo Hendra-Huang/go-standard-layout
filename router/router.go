@@ -28,6 +28,7 @@ func New(opts Options) *Router {
 		r:       muxRouter,
 		options: opts,
 	}
+
 	return rtr
 }
 
@@ -57,14 +58,8 @@ func (rtr Router) timeout(h http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-// URLParam get param from rest request
-func URLParam(r *http.Request, key string) string {
-	params := mux.Vars(r)
-	return params[key]
-}
-
 // SubRouter return a new Router with path prefix
-func (rtr Router) SubRouter(pathPrefix string) *Router {
+func (rtr *Router) SubRouter(pathPrefix string) *Router {
 	muxSubrouter := rtr.r.PathPrefix(pathPrefix).Subrouter()
 
 	return &Router{
@@ -74,31 +69,31 @@ func (rtr Router) SubRouter(pathPrefix string) *Router {
 }
 
 // Get function
-func (rtr Router) Get(pattern string, h http.HandlerFunc) {
+func (rtr *Router) Get(pattern string, h http.HandlerFunc) {
 	rtr.r.HandleFunc(pattern, prometheus.InstrumentHandlerFunc(pattern, rtr.timeout(h))).Methods("GET")
 }
 
 // Post function
-func (rtr Router) Post(pattern string, h http.HandlerFunc) {
+func (rtr *Router) Post(pattern string, h http.HandlerFunc) {
 	rtr.r.HandleFunc(pattern, prometheus.InstrumentHandlerFunc(pattern, rtr.timeout(h))).Methods("POST")
 }
 
 // Put function
-func (rtr Router) Put(pattern string, h http.HandlerFunc) {
+func (rtr *Router) Put(pattern string, h http.HandlerFunc) {
 	rtr.r.HandleFunc(pattern, prometheus.InstrumentHandlerFunc(pattern, rtr.timeout(h))).Methods("PUT")
 }
 
 // Delete function
-func (rtr Router) Delete(pattern string, h http.HandlerFunc) {
+func (rtr *Router) Delete(pattern string, h http.HandlerFunc) {
 	rtr.r.HandleFunc(pattern, prometheus.InstrumentHandlerFunc(pattern, rtr.timeout(h))).Methods("DELETE")
 }
 
 // Patch function
-func (rtr Router) Patch(pattern string, h http.HandlerFunc) {
+func (rtr *Router) Patch(pattern string, h http.HandlerFunc) {
 	rtr.r.HandleFunc(pattern, prometheus.InstrumentHandlerFunc(pattern, rtr.timeout(h))).Methods("PATCH")
 }
 
 // ServeHTTP function
-func (rtr Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (rtr *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	rtr.r.ServeHTTP(w, r)
 }

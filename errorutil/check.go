@@ -1,6 +1,6 @@
 package errorutil
 
-import "github.com/tokopedia/vehicle-insurance/backend/log"
+import "github.com/Hendra-Huang/go-standard-layout/log"
 
 // CheckAndLog checks the error and log if the error exist
 func CheckAndLog(err error) {

@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/tokopedia/vehicle-insurance/backend/testingutil"
+	"github.com/Hendra-Huang/go-standard-layout/testingutil"
 )
 
 func TestErrs(t *testing.T) {
