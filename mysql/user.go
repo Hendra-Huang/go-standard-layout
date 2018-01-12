@@ -1,4 +1,4 @@
-package postgresql
+package mysql
 
 import (
 	"context"
@@ -24,8 +24,8 @@ type (
 
 func NewUserRepository(master, slave *DB) *UserRepository {
 	findAllQuery := `SELECT id, email, name FROM users`
-	findByIDQuery := `SELECT id, email, name FROM users where id = $1`
-	createQuery := `INSERT INTO users(id, email, name) VALUES ($1, $2, $3)`
+	findByIDQuery := `SELECT id, email, name FROM users where id = ?`
+	createQuery := `INSERT INTO users(id, email, name) VALUES (?, ?, ?)`
 
 	findAllStmt := slave.SafePreparex(findAllQuery)
 	findByIDStmt := slave.SafePreparex(findByIDQuery)
@@ -44,9 +44,9 @@ func NewUserRepository(master, slave *DB) *UserRepository {
 	}
 }
 
-func (us *UserRepository) FindAll(ctx context.Context) ([]myapp.User, error) {
+func (ur *UserRepository) FindAll(ctx context.Context) ([]myapp.User, error) {
 	var users []myapp.User
-	err := us.statements.findAll.SelectContext(ctx, &users)
+	err := ur.statements.findAll.SelectContext(ctx, &users)
 	if err != nil {
 		return nil, err
 	}
@@ -54,9 +54,9 @@ func (us *UserRepository) FindAll(ctx context.Context) ([]myapp.User, error) {
 	return users, nil
 }
 
-func (us *UserRepository) FindByID(ctx context.Context, id int64) (myapp.User, error) {
+func (ur *UserRepository) FindByID(ctx context.Context, id int64) (myapp.User, error) {
 	var user myapp.User
-	err := us.statements.findByID.GetContext(ctx, &user, id)
+	err := ur.statements.findByID.GetContext(ctx, &user, id)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return user, nil
@@ -67,8 +67,8 @@ func (us *UserRepository) FindByID(ctx context.Context, id int64) (myapp.User, e
 	return user, nil
 }
 
-func (us *UserRepository) Create(ctx context.Context, id int64, email, name string) error {
-	_, err := us.statements.create.ExecContext(ctx, id, email, name)
+func (ur *UserRepository) Create(ctx context.Context, id int64, email, name string) error {
+	_, err := ur.statements.create.ExecContext(ctx, id, email, name)
 	if err != nil {
 		return err
 	}

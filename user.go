@@ -20,9 +20,9 @@ type (
 	}
 )
 
-func NewUserService(userRepository userRepository) *UserService {
+func NewUserService(ur userRepository) *UserService {
 	return &UserService{
-		userRepository: userRepository,
+		userRepository: ur,
 	}
 }
 

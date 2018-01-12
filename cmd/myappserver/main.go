@@ -6,7 +6,7 @@ import (
 	"github.com/Hendra-Huang/go-standard-layout"
 	"github.com/Hendra-Huang/go-standard-layout/errorutil"
 	"github.com/Hendra-Huang/go-standard-layout/log"
-	"github.com/Hendra-Huang/go-standard-layout/postgresql"
+	"github.com/Hendra-Huang/go-standard-layout/mysql"
 	"github.com/Hendra-Huang/go-standard-layout/router"
 	"github.com/Hendra-Huang/go-standard-layout/server"
 	"github.com/Hendra-Huang/go-standard-layout/server/handler"
@@ -14,9 +14,9 @@ import (
 
 func main() {
 	// initialize database
-	db, err := postgresql.New(postgresql.Options{
+	db, err := mysql.New(mysql.Options{
 		DBHost:     "127.0.0.1",
-		DBPort:     "5435",
+		DBPort:     "3307",
 		DBUser:     "myapp",
 		DBPassword: "myapp",
 		DBName:     "myapp",
@@ -27,7 +27,7 @@ func main() {
 	})
 
 	// initialize repository
-	userRepository := postgresql.NewUserRepository(db, db)
+	userRepository := mysql.NewUserRepository(db, db)
 
 	// initialize service
 	userService := myapp.NewUserService(userRepository)

@@ -1,25 +1,15 @@
 version: "2"
 services:
-    #myappserver:
-        #build:
-            #context: .
-            #dockerfile: ./dev-files/docker/Dockerfile
-        #container_name: vehicleinsuranceserver
-        #depends_on:
-            #- postgres
-            #- redis
-        #ports:
-            #- "9900:9900"
-
-    postgres:
-        image: "postgres:9.5-alpine"
-        container_name: postgres
-        ports:
-            - "5435:5432"
-        volumes:
-            - "./postgresql/schema.sql:/docker-entrypoint-initdb.d/schema.sql"
-            - "./postgresql/testdata/:/docker-entrypoint-initdb.d/"
-        environment:
-            POSTGRES_USER: myapp
-            POSTGRES_PASSWORD: myapp
-            POSTGRES_DB: myapp
+  myappdb:
+    image: mysql:5.7
+    container_name: myappdb
+    volumes:
+      - "./mysql/schema.sql:/docker-entrypoint-initdb.d/schema.sql"
+      - "./mysql/testdata/:/docker-entrypoint-initdb.d/"
+    environment:
+      MYSQL_DATABASE: myapp
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: myapp
+      MYSQL_PASSWORD: myapp
+    ports:
+      - "3307:3306"

@@ -1,10 +1,5 @@
 package env
 
-/*
-This env package is used for this project only
-Will return all defined env value from TKPENV
-*/
-
 import "os"
 
 type Environment string
@@ -19,7 +14,7 @@ const (
 	Staging     Environment = "staging"
 	Production  Environment = "production"
 
-	envVar = "TKPENV"
+	envVar = "MYAPPENV"
 )
 
 func Get() Environment {
