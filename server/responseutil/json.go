@@ -14,9 +14,10 @@ func JSON(w http.ResponseWriter, data interface{}, options ...WriterOption) {
 	for _, option := range options {
 		option(w)
 	}
-	err := json.NewEncoder(w).Encode(data)
+	body, err := json.Marshal(data)
 	errorutil.CheckWithErrorHandler(err, func(err error) {
 		log.Error(err)
 		InternalServerError(w)
 	})
+	w.Write(body)
 }

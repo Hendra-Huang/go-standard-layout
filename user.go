@@ -10,17 +10,17 @@ type (
 	}
 
 	UserService struct {
-		userRepository userRepository
+		userRepository UserRepository
 	}
 
-	userRepository interface {
+	UserRepository interface {
 		FindAll(context.Context) ([]User, error)
 		FindByID(context.Context, int64) (User, error)
 		Create(context.Context, int64, string, string) error
 	}
 )
 
-func NewUserService(ur userRepository) *UserService {
+func NewUserService(ur UserRepository) *UserService {
 	return &UserService{
 		userRepository: ur,
 	}

@@ -2,6 +2,7 @@ package mock
 
 import (
 	"context"
+	"errors"
 
 	"github.com/Hendra-Huang/go-standard-layout"
 )
@@ -37,4 +38,20 @@ func (ur *UserRepository) FindByID(ctx context.Context, id int64) (myapp.User, e
 
 func (ur *UserRepository) Create(ctx context.Context, id int64, email, name string) error {
 	return nil
+}
+
+type UserRepositoryWithError struct{}
+
+func (ur *UserRepositoryWithError) FindAll(ctx context.Context) ([]myapp.User, error) {
+	return nil, errors.New("internal error")
+}
+
+func (ur *UserRepositoryWithError) FindByID(ctx context.Context, id int64) (myapp.User, error) {
+	user := myapp.User{}
+
+	return user, errors.New("internal error")
+}
+
+func (ur *UserRepositoryWithError) Create(ctx context.Context, id int64, email, name string) error {
+	return errors.New("internal error")
 }

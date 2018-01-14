@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 	"strconv"
 
@@ -12,12 +13,17 @@ import (
 )
 
 type (
+	UserServicer interface {
+		FindAll(context.Context) ([]myapp.User, error)
+		FindByID(context.Context, int64) (myapp.User, error)
+	}
+
 	UserHandler struct {
-		userService *myapp.UserService
+		userService UserServicer
 	}
 )
 
-func NewUserHandler(us *myapp.UserService) *UserHandler {
+func NewUserHandler(us UserServicer) *UserHandler {
 	return &UserHandler{us}
 }
 
