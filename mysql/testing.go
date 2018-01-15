@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Hendra-Huang/go-standard-layout/testingutil"
 	_ "github.com/go-sql-driver/mysql" // mysql driver
-	"github.com/tokopedia/wallet/testingutil"
 )
 
 const (

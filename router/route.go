@@ -7,7 +7,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-func RegisterRoute(rtr *Router, pingHandler *handler.PingHandler, userHandler *handler.UserHandler) {
+func RegisterRoute(rtr *Router, pingHandler *handler.PingHandler, userHandler *handler.UserHandler, articleHandler *handler.ArticleHandler) {
 	rtr.Get("/metrics", func(w http.ResponseWriter, r *http.Request) {
 		prometheus.Handler()
 	})
@@ -16,4 +16,6 @@ func RegisterRoute(rtr *Router, pingHandler *handler.PingHandler, userHandler *h
 	apiRouter := rtr.SubRouter("/api/v1")
 	apiRouter.Get("/users", userHandler.GetAllUsers)
 	apiRouter.Get("/user/{id}", userHandler.GetUserByID)
+
+	apiRouter.Get("/user/{user_id}/articles", articleHandler.GetAllArticlesByUserID)
 }

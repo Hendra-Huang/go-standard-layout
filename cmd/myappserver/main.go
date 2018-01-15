@@ -28,13 +28,16 @@ func main() {
 
 	// initialize repository
 	userRepository := mysql.NewUserRepository(db, db)
+	articleRepository := mysql.NewArticleRepository(db, db)
 
 	// initialize service
 	userService := myapp.NewUserService(userRepository)
+	articleService := myapp.NewArticleService(articleRepository)
 
 	// initialize handler
 	pingHandler := handler.NewPingHandler()
 	userHandler := handler.NewUserHandler(userService)
+	articleHandler := handler.NewArticleHandler(articleService)
 
 	server := server.New(server.Options{
 		ListenAddress: ":5555",
@@ -44,7 +47,7 @@ func main() {
 		Timeout: 5 * time.Second,
 	})
 
-	router.RegisterRoute(r, pingHandler, userHandler)
+	router.RegisterRoute(r, pingHandler, userHandler, articleHandler)
 	err = server.Serve(r)
 	if err != nil {
 		log.Fatalf("Error starting webserver. %s\n", err.Error())
