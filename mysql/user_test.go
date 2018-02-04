@@ -12,10 +12,10 @@ import (
 
 func TestFindAll(t *testing.T) {
 	t.Parallel()
-	db, dbName, cleanup := mysql.CreateTestDatabase(t)
+	db, _, cleanup := mysql.CreateTestDatabase(t)
 	defer cleanup()
 
-	mysql.LoadFixtures(t, db, dbName, "user")
+	mysql.LoadFixtures(t, db, "user")
 
 	ur := mysql.NewUserRepository(db, db)
 	users, err := ur.FindAll(context.Background())
@@ -28,10 +28,10 @@ func TestFindAll(t *testing.T) {
 
 func TestFindByID(t *testing.T) {
 	t.Parallel()
-	db, dbName, cleanup := mysql.CreateTestDatabase(t)
+	db, _, cleanup := mysql.CreateTestDatabase(t)
 	defer cleanup()
 
-	mysql.LoadFixtures(t, db, dbName, "user")
+	mysql.LoadFixtures(t, db, "user")
 
 	expectedID := int64(1)
 	ur := mysql.NewUserRepository(db, db)
@@ -44,10 +44,10 @@ func TestFindByID(t *testing.T) {
 
 func TestFindByIDWithNotFound(t *testing.T) {
 	t.Parallel()
-	db, dbName, cleanup := mysql.CreateTestDatabase(t)
+	db, _, cleanup := mysql.CreateTestDatabase(t)
 	defer cleanup()
 
-	mysql.LoadFixtures(t, db, dbName, "user")
+	mysql.LoadFixtures(t, db, "user")
 
 	expectedID := int64(1000)
 	ur := mysql.NewUserRepository(db, db)
@@ -60,10 +60,10 @@ func TestFindByIDWithNotFound(t *testing.T) {
 
 func TestCreate(t *testing.T) {
 	t.Parallel()
-	db, dbName, cleanup := mysql.CreateTestDatabase(t)
+	db, _, cleanup := mysql.CreateTestDatabase(t)
 	defer cleanup()
 
-	mysql.LoadFixtures(t, db, dbName, "user")
+	mysql.LoadFixtures(t, db, "user")
 
 	ur := mysql.NewUserRepository(db, db)
 	err := ur.Create(context.Background(), 10, "test@example.com", "test")
@@ -72,10 +72,10 @@ func TestCreate(t *testing.T) {
 
 func TestCreateWithDuplicateID(t *testing.T) {
 	t.Parallel()
-	db, dbName, cleanup := mysql.CreateTestDatabase(t)
+	db, _, cleanup := mysql.CreateTestDatabase(t)
 	defer cleanup()
 
-	mysql.LoadFixtures(t, db, dbName, "user")
+	mysql.LoadFixtures(t, db, "user")
 
 	ur := mysql.NewUserRepository(db, db)
 	err := ur.Create(context.Background(), 1, "test@example.com", "test")

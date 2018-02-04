@@ -61,8 +61,8 @@ func CreateTestDatabase(t *testing.T) (*DB, string, func()) {
 	}
 }
 
-func LoadFixtures(t *testing.T, db *DB, databaseName, fixtureName string) {
-	loadSchema(t, db, databaseName)
+func LoadFixtures(t *testing.T, db *DB, fixtureName string) {
+	loadSchema(t, db)
 	content, err := ioutil.ReadFile(fmt.Sprintf("./testdata/%s.sql", fixtureName))
 	testingutil.Ok(t, err)
 
@@ -75,7 +75,7 @@ func LoadFixtures(t *testing.T, db *DB, databaseName, fixtureName string) {
 	}
 }
 
-func loadSchema(t *testing.T, db *DB, databaseName string) {
+func loadSchema(t *testing.T, db *DB) {
 	content, err := ioutil.ReadFile("./schema.sql")
 	testingutil.Ok(t, err)
 
