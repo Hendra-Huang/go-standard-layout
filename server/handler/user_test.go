@@ -13,6 +13,7 @@ import (
 	"github.com/Hendra-Huang/go-standard-layout/server/handler"
 	"github.com/Hendra-Huang/go-standard-layout/server/handler/mock"
 	"github.com/Hendra-Huang/go-standard-layout/testingutil"
+	"github.com/opentracing/opentracing-go/mocktracer"
 )
 
 func TestNewUserHandler(t *testing.T) {
@@ -95,9 +96,10 @@ func TestGetUserByID(t *testing.T) {
 	for _, tc := range testCases {
 		userHandler := handler.NewUserHandler(tc.us)
 
+		tracer := mocktracer.New()
 		r := router.New(router.Options{
 			Timeout: 1 * time.Second,
-		})
+		}, tracer)
 		r.Get("/api/v1/user/{id}", userHandler.GetUserByID)
 		ts := httptest.NewServer(r)
 		defer ts.Close()

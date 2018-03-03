@@ -1,6 +1,10 @@
 package myapp
 
-import "context"
+import (
+	"context"
+
+	opentracing "github.com/opentracing/opentracing-go"
+)
 
 type (
 	Article struct {
@@ -10,6 +14,7 @@ type (
 	}
 
 	ArticleService struct {
+		tracer            opentracing.Tracer
 		articleRepository ArticleRepository
 	}
 
@@ -19,12 +24,20 @@ type (
 	}
 )
 
-func NewArticleService(ar ArticleRepository) *ArticleService {
+func NewArticleService(tracer opentracing.Tracer, ar ArticleRepository) *ArticleService {
 	return &ArticleService{
+		tracer:            tracer,
 		articleRepository: ar,
 	}
 }
 
-func (us *ArticleService) FindByUserID(ctx context.Context, userID int64) ([]Article, error) {
-	return us.articleRepository.FindByUserID(ctx, userID)
+func (as *ArticleService) FindByUserID(ctx context.Context, userID int64) ([]Article, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := as.tracer.StartSpan("ArticleService.FindByUserID", opentracing.ChildOf(span.Context()))
+		span.SetTag("user_id", userID)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
+
+	return as.articleRepository.FindByUserID(ctx, userID)
 }

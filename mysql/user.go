@@ -6,6 +6,7 @@ import (
 
 	"github.com/Hendra-Huang/go-standard-layout"
 	"github.com/jmoiron/sqlx"
+	opentracing "github.com/opentracing/opentracing-go"
 )
 
 type (
@@ -16,13 +17,14 @@ type (
 	}
 
 	UserRepository struct {
+		tracer     opentracing.Tracer
 		Master     *DB
 		Slave      *DB
 		statements userPreparedStatements
 	}
 )
 
-func NewUserRepository(master, slave *DB) *UserRepository {
+func NewUserRepository(tracer opentracing.Tracer, master, slave *DB) *UserRepository {
 	findAllQuery := `SELECT id, email, name FROM users`
 	findByIDQuery := `SELECT id, email, name FROM users where id = ?`
 	createQuery := `INSERT INTO users(id, email, name) VALUES (?, ?, ?)`
@@ -38,6 +40,7 @@ func NewUserRepository(master, slave *DB) *UserRepository {
 	}
 
 	return &UserRepository{
+		tracer:     tracer,
 		Master:     master,
 		Slave:      slave,
 		statements: preparedStatements,
@@ -45,6 +48,12 @@ func NewUserRepository(master, slave *DB) *UserRepository {
 }
 
 func (ur *UserRepository) FindAll(ctx context.Context) ([]myapp.User, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := ur.tracer.StartSpan("UserRepository.FindAll", opentracing.ChildOf(span.Context()))
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
+
 	var users []myapp.User
 	err := ur.statements.findAll.SelectContext(ctx, &users)
 	if err != nil {
@@ -55,6 +64,13 @@ func (ur *UserRepository) FindAll(ctx context.Context) ([]myapp.User, error) {
 }
 
 func (ur *UserRepository) FindByID(ctx context.Context, id int64) (myapp.User, error) {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := ur.tracer.StartSpan("UserRepository.FindByID", opentracing.ChildOf(span.Context()))
+		span.SetTag("id", id)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
+
 	var user myapp.User
 	err := ur.statements.findByID.GetContext(ctx, &user, id)
 	if err != nil {
@@ -68,6 +84,15 @@ func (ur *UserRepository) FindByID(ctx context.Context, id int64) (myapp.User, e
 }
 
 func (ur *UserRepository) Create(ctx context.Context, id int64, email, name string) error {
+	if span := opentracing.SpanFromContext(ctx); span != nil {
+		span := ur.tracer.StartSpan("UserRepository.Create", opentracing.ChildOf(span.Context()))
+		span.SetTag("id", id)
+		span.SetTag("email", email)
+		span.SetTag("name", name)
+		defer span.Finish()
+		ctx = opentracing.ContextWithSpan(ctx, span)
+	}
+
 	_, err := ur.statements.create.ExecContext(ctx, id, email, name)
 	if err != nil {
 		return err

@@ -8,6 +8,7 @@ import (
 
 	"github.com/Hendra-Huang/go-standard-layout/mysql"
 	"github.com/Hendra-Huang/go-standard-layout/testingutil"
+	"github.com/opentracing/opentracing-go/mocktracer"
 )
 
 func TestFindAll(t *testing.T) {
@@ -17,7 +18,8 @@ func TestFindAll(t *testing.T) {
 
 	mysql.LoadFixtures(t, db, "user")
 
-	ur := mysql.NewUserRepository(db, db)
+	tracer := mocktracer.New()
+	ur := mysql.NewUserRepository(tracer, db, db)
 	users, err := ur.FindAll(context.Background())
 	testingutil.Ok(t, err)
 	testingutil.Equals(t, 2, len(users))
@@ -34,7 +36,8 @@ func TestFindByID(t *testing.T) {
 	mysql.LoadFixtures(t, db, "user")
 
 	expectedID := int64(1)
-	ur := mysql.NewUserRepository(db, db)
+	tracer := mocktracer.New()
+	ur := mysql.NewUserRepository(tracer, db, db)
 	user, err := ur.FindByID(context.Background(), expectedID)
 	testingutil.Ok(t, err)
 	testingutil.Equals(t, expectedID, user.ID)
@@ -50,7 +53,8 @@ func TestFindByIDWithNotFound(t *testing.T) {
 	mysql.LoadFixtures(t, db, "user")
 
 	expectedID := int64(1000)
-	ur := mysql.NewUserRepository(db, db)
+	tracer := mocktracer.New()
+	ur := mysql.NewUserRepository(tracer, db, db)
 	user, err := ur.FindByID(context.Background(), expectedID)
 	testingutil.Ok(t, err)
 	testingutil.Equals(t, int64(0), user.ID)
@@ -65,7 +69,8 @@ func TestCreate(t *testing.T) {
 
 	mysql.LoadFixtures(t, db, "user")
 
-	ur := mysql.NewUserRepository(db, db)
+	tracer := mocktracer.New()
+	ur := mysql.NewUserRepository(tracer, db, db)
 	err := ur.Create(context.Background(), 10, "test@example.com", "test")
 	testingutil.Ok(t, err)
 }
@@ -77,7 +82,8 @@ func TestCreateWithDuplicateID(t *testing.T) {
 
 	mysql.LoadFixtures(t, db, "user")
 
-	ur := mysql.NewUserRepository(db, db)
+	tracer := mocktracer.New()
+	ur := mysql.NewUserRepository(tracer, db, db)
 	err := ur.Create(context.Background(), 1, "test@example.com", "test")
 	testingutil.Assert(t, err != nil, "Error should not be nil")
 }

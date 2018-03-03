@@ -10,13 +10,15 @@ import (
 
 	"github.com/Hendra-Huang/go-standard-layout/router"
 	"github.com/Hendra-Huang/go-standard-layout/testingutil"
+	"github.com/opentracing/opentracing-go/mocktracer"
 )
 
 func TestNew(t *testing.T) {
 	options := router.Options{
 		Timeout: 1 * time.Second,
 	}
-	rtr := router.New(options)
+	tracer := mocktracer.New()
+	rtr := router.New(options, tracer)
 	testingutil.Assert(t, rtr != nil, "New returns nil")
 }
 
@@ -24,7 +26,8 @@ func TestGet(t *testing.T) {
 	options := router.Options{
 		Timeout: 1 * time.Second,
 	}
-	rtr := router.New(options)
+	tracer := mocktracer.New()
+	rtr := router.New(options, tracer)
 	rtr.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "testing")
 	})
@@ -46,7 +49,8 @@ func TestPost(t *testing.T) {
 	options := router.Options{
 		Timeout: 1 * time.Second,
 	}
-	rtr := router.New(options)
+	tracer := mocktracer.New()
+	rtr := router.New(options, tracer)
 	rtr.Post("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "testing")
 	})
@@ -68,7 +72,8 @@ func TestGetWithMethodNotAllowed(t *testing.T) {
 	options := router.Options{
 		Timeout: 1 * time.Second,
 	}
-	rtr := router.New(options)
+	tracer := mocktracer.New()
+	rtr := router.New(options, tracer)
 	rtr.Post("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "testing")
 	})
@@ -86,7 +91,8 @@ func TestGetWithTimeout(t *testing.T) {
 	options := router.Options{
 		Timeout: 10 * time.Millisecond,
 	}
-	rtr := router.New(options)
+	tracer := mocktracer.New()
+	rtr := router.New(options, tracer)
 	rtr.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(20 * time.Millisecond)
 		fmt.Fprintf(w, "testing")

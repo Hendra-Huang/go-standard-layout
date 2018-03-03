@@ -16,7 +16,7 @@ Reading some articles for designing go standard layout. These are the guidelines
 
 ## About the project
 
-This is a small app that consist of 2 entities, User and Article. 1 user can have more than 1 articles. For both entities, there are some sample endpoints provided. I wrap the router and provides basic monitoring using prometheus. I use [dep](https://github.com/golang/dep) for depedency management. This app is also provided with unit test and parallel database integration test.
+This is a small app that consist of 2 entities, User and Article. 1 user can have more than 1 articles. For both entities, there are some sample endpoints provided. I wrap the router and provides basic monitoring using prometheus. I use [dep](https://github.com/golang/dep) for depedency management. There is simple opentracing implementation in this app. This app is also provided with unit test and parallel database integration test.
 
 ## About the structure
 
