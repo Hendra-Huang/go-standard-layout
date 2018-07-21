@@ -9,13 +9,14 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Hendra-Huang/go-standard-layout/env"
 	"github.com/Hendra-Huang/go-standard-layout/testingutil"
 	_ "github.com/go-sql-driver/mysql" // mysql driver
 )
 
 const (
-	dbHost     = "127.0.0.1"
-	dbPort     = "3307"
+	dbHost     = "myappdb"
+	dbPort     = "3306"
 	dbUser     = "root"
 	dbPassword = "root"
 	dbName     = "myapp"
@@ -23,6 +24,8 @@ const (
 
 // CreateTestDatabase will create a test-database and test-schema
 func CreateTestDatabase(t *testing.T) (*DB, string, func()) {
+	dbHost := env.GetWithDefault("TEST_DB_HOST", "127.0.0.1")
+	dbPort := env.GetWithDefault("TEST_DB_PORT", "3306")
 	db, dbErr := New(Options{
 		DBHost:     dbHost,
 		DBPort:     dbPort,

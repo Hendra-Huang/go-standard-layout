@@ -1,0 +1,2 @@
+TEST_DB_HOST=myappdb
+TEST_DB_PORT=3306

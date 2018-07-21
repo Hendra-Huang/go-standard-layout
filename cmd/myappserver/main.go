@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/Hendra-Huang/go-standard-layout"
+	"github.com/Hendra-Huang/go-standard-layout/env"
 	"github.com/Hendra-Huang/go-standard-layout/errorutil"
 	"github.com/Hendra-Huang/go-standard-layout/log"
 	"github.com/Hendra-Huang/go-standard-layout/mysql"
@@ -20,8 +21,8 @@ func main() {
 
 	// initialize database
 	db, err := mysql.New(mysql.Options{
-		DBHost:     "127.0.0.1",
-		DBPort:     "3307",
+		DBHost:     env.GetWithDefault("DB_HOST", "127.0.0.1"),
+		DBPort:     env.GetWithDefault("DB_PORT", "3306"),
 		DBUser:     "myapp",
 		DBPassword: "myapp",
 		DBName:     "myapp",

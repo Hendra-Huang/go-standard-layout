@@ -1,0 +1,21 @@
+workspace:
+  base: /go
+  path: src/github.com/Hendra-Huang/go-standard-layout
+
+pipeline:
+  build:
+    image: golang:1.10
+    environment:
+      - MYAPPENV=test
+    commands:
+      - make build
+      - make test
+
+services:
+  myappdb:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: myapp
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: myapp
+      MYSQL_PASSWORD: myapp
