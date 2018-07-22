@@ -24,7 +24,7 @@ type (
 
 func NewArticleRepository(tracer opentracing.Tracer, master, slave *DB) *ArticleRepository {
 	findByUserIDQuery := `SELECT id, user_id, title FROM article where user_id = ?`
-	createQuery := `INSERT INTO article(id, user_id, title) VALUES (?, ?, ?)`
+	createQuery := `INSERT INTO article(user_id, title) VALUES (?, ?)`
 
 	findByUserIDStmt := slave.SafePreparex(findByUserIDQuery)
 	createStmt := master.SafePreparex(createQuery)
@@ -59,17 +59,16 @@ func (ar *ArticleRepository) FindByUserID(ctx context.Context, userID int64) ([]
 	return articles, nil
 }
 
-func (ar *ArticleRepository) Create(ctx context.Context, id, userID int64, title string) error {
+func (ar *ArticleRepository) Create(ctx context.Context, userID int64, title string) error {
 	if span := opentracing.SpanFromContext(ctx); span != nil {
 		span := ar.tracer.StartSpan("ArticleRepository.Create", opentracing.ChildOf(span.Context()))
-		span.SetTag("id", id)
 		span.SetTag("user_id", userID)
 		span.SetTag("title", title)
 		defer span.Finish()
 		ctx = opentracing.ContextWithSpan(ctx, span)
 	}
 
-	_, err := ar.statements.create.ExecContext(ctx, id, userID, title)
+	_, err := ar.statements.create.ExecContext(ctx, userID, title)
 	if err != nil {
 		return err
 	}

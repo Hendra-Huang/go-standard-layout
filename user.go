@@ -21,7 +21,7 @@ type (
 	UserRepository interface {
 		FindAll(context.Context) ([]User, error)
 		FindByID(context.Context, int64) (User, error)
-		Create(context.Context, int64, string, string) error
+		Create(context.Context, string, string) error
 	}
 )
 

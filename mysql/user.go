@@ -27,7 +27,7 @@ type (
 func NewUserRepository(tracer opentracing.Tracer, master, slave *DB) *UserRepository {
 	findAllQuery := `SELECT id, email, name FROM users`
 	findByIDQuery := `SELECT id, email, name FROM users where id = ?`
-	createQuery := `INSERT INTO users(id, email, name) VALUES (?, ?, ?)`
+	createQuery := `INSERT INTO users(email, name) VALUES (?, ?)`
 
 	findAllStmt := slave.SafePreparex(findAllQuery)
 	findByIDStmt := slave.SafePreparex(findByIDQuery)
@@ -83,17 +83,16 @@ func (ur *UserRepository) FindByID(ctx context.Context, id int64) (myapp.User, e
 	return user, nil
 }
 
-func (ur *UserRepository) Create(ctx context.Context, id int64, email, name string) error {
+func (ur *UserRepository) Create(ctx context.Context, email, name string) error {
 	if span := opentracing.SpanFromContext(ctx); span != nil {
 		span := ur.tracer.StartSpan("UserRepository.Create", opentracing.ChildOf(span.Context()))
-		span.SetTag("id", id)
 		span.SetTag("email", email)
 		span.SetTag("name", name)
 		defer span.Finish()
 		ctx = opentracing.ContextWithSpan(ctx, span)
 	}
 
-	_, err := ur.statements.create.ExecContext(ctx, id, email, name)
+	_, err := ur.statements.create.ExecContext(ctx, email, name)
 	if err != nil {
 		return err
 	}

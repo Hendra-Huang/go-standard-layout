@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/Hendra-Huang/go-standard-layout"
+	"github.com/Hendra-Huang/go-standard-layout/env"
 	"github.com/Hendra-Huang/go-standard-layout/errorutil"
 	"github.com/Hendra-Huang/go-standard-layout/log"
 	"github.com/Hendra-Huang/go-standard-layout/router/helper"
@@ -35,6 +36,7 @@ func (uh *UserHandler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 		responseutil.InternalServerError(w)
 		return
 	}
+	log.Error("DEBUG - " + env.Get("DB_HOST"))
 
 	responseutil.JSON(w, users, responseutil.WithStatus(http.StatusOK))
 }

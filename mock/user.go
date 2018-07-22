@@ -36,7 +36,7 @@ func (ur *UserRepository) FindByID(ctx context.Context, id int64) (myapp.User, e
 	return user, nil
 }
 
-func (ur *UserRepository) Create(ctx context.Context, id int64, email, name string) error {
+func (ur *UserRepository) Create(ctx context.Context, email, name string) error {
 	return nil
 }
 
@@ -52,6 +52,6 @@ func (ur *UserRepositoryWithError) FindByID(ctx context.Context, id int64) (myap
 	return user, errors.New("internal error")
 }
 
-func (ur *UserRepositoryWithError) Create(ctx context.Context, id int64, email, name string) error {
+func (ur *UserRepositoryWithError) Create(ctx context.Context, email, name string) error {
 	return errors.New("internal error")
 }
