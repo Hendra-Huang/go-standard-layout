@@ -2,15 +2,6 @@ workspace:
   base: /go
   path: src/github.com/Hendra-Huang/go-standard-layout
 
-pipeline:
-  build:
-    image: golang:1.10
-    environment:
-      - MYAPPENV=test
-    commands:
-      - make build
-      - make test
-
 services:
   myappdb:
     image: mysql:5.7
@@ -19,3 +10,28 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: myapp
       MYSQL_PASSWORD: myapp
+
+pipeline:
+  test:
+    image: golang:1.10-alpine
+    environment:
+      - MYAPPENV=test
+    commands:
+      - apk add --update --no-cache make
+      - make build
+      - make test
+
+  build:
+    image: appleboy/drone-packer
+    environment:
+      - MYAPPENV=prod
+      - WORKDIR=${CI_BUILD_DIR}
+      - BRANCH=${CI_BRANCH}
+      - BUILD_VERSION=${CI_BRANCH}-${CI_COMMIT:0:8}
+    secrets: [ docker_username, docker_password ]
+    template: build.json
+    actions:
+      - validate
+      - build
+    when:
+      branch: [ master, staging ]
