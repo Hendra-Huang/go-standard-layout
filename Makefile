@@ -7,7 +7,7 @@ build:
 	CGO_ENABLED=0 go build -o bin/myappserver ./cmd/myappserver/main.go
 
 unit-test:
-	go test -v ./...
+	${appenv} go test -v ./...
 
 partial-test:
 	${appenv} go test -v -tags=integration ${ARGS}
@@ -15,4 +15,4 @@ partial-test:
 test:
 	${appenv} go test -v -tags=integration ./...
 
-.PHONY: build unit-test partial-test test
+.PHONY: run-myappserver build unit-test partial-test test

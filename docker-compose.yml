@@ -20,3 +20,11 @@ services:
       - "5775:5775/udp"
       - "6831:6831/udp"
       - "16686:16686"
+
+  myappserver:
+    build: .
+    container_name: myappserver
+    env_file:
+      - env_dev
+    ports:
+      - 5555:5555

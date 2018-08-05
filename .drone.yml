@@ -21,17 +21,13 @@ pipeline:
       - make build
       - make test
 
-  build:
-    image: appleboy/drone-packer
-    environment:
-      - MYAPPENV=prod
-      - WORKDIR=${CI_BUILD_DIR}
-      - BRANCH=${CI_BRANCH}
-      - BUILD_VERSION=${CI_BRANCH}-${CI_COMMIT:0:8}
+  publish_image:
+    image: plugins/docker
+    repo: hendrahuang/go-standard-layout
+    target: myappserver
+    tags:
+      - ${DRONE_BRANCH}
+      - ${DRONE_BRANCH}-${DRONE_COMMIT:0:7}
     secrets: [ docker_username, docker_password ]
-    template: build.json
-    actions:
-      - validate
-      - build
     when:
       branch: [ master, staging ]
