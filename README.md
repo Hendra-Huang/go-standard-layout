@@ -1,3 +1,7 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/Hendra-Huang/go-standard-layout?style=flat-square)](https://goreportcard.com/report/github.com/Hendra-Huang/go-standard-layout)
+[![Go Doc](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat-square)](http://godoc.org/github.com/Hendra-Huang/go-standard-layout)
+[![Release](https://img.shields.io/github/release/Hendra-Huang/go-standard-layout.svg?style=flat-square)](https://github.com/Hendra-Huang/go-standard-layout/releases/latest)
+
 # go-standard-layout
 
 Reading some articles for designing go standard layout. These are the guidelines that I use:
