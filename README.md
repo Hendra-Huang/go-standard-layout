@@ -4,7 +4,7 @@
 
 # go-standard-layout
 
-Reading some articles for designing go standard layout. These are the guidelines that I use :
+Reading some articles for designing go standard layout. These are the guidelines that I use:
 1. Root package is for domain types
 2. Group subpackages by dependency
 3. Make dependencies explicit!
